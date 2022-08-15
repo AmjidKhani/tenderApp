@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/chats_provider.dart';
 import '../../widgets/chat_item.dart';
 
@@ -19,47 +18,30 @@ class _Chat_TabState extends State<Chat_Tab> {
     double width = MediaQuery.of(context).size.width;
     final chatData = Provider.of<ChatProvider>(context);
     return Scaffold(
+appBar: AppBar(title: Text("Inbox"),
 
-      body:NestedScrollView(
-        headerSliverBuilder: (
-            context,  innerBoxIsScrolled) =>[
-              SliverAppBar(
-                snap: true,
-                floating: true,
-                title: Text("Inbox"),
-                centerTitle: true,
-              )
+centerTitle: true,),
+      body:  ListView(
+        children:[
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: CupertinoSearchTextField(),
+          ),
+              ListView.builder(
+                shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: chatData.chats.length,
+                  itemBuilder: (_, i) => ChatItem(
+                    image: chatData.chats[i].profilePic,
+                    name: chatData.chats[i].name,
+                    lastMessage: chatData.chats[i].lastmessage,
+                    lastMsgTime: chatData.chats[i].lastmsgTime,
+                  ),
+                ),
+
         ],
-
-      body: Column(
-          children: [
-      Padding(
-      padding: const EdgeInsets.all(20.0),
-        child: CupertinoSearchTextField(
-
-        ),
-      ),
-
-       Expanded(
-         child: ListView.builder(
-              itemCount: chatData.chats.length,
-              itemBuilder: (_, i) => ChatItem(
-                image: chatData.chats[i].profilePic,
-                name: chatData.chats[i].name,
-                lastMessage: chatData.chats[i].lastmessage,
-                lastMsgTime: chatData.chats[i].lastmsgTime,
-              ),
-            ),
-       ),
-        
-
-
-
-],
-    )
-
-
-      )
+    ),
     );
+
   }
 }
